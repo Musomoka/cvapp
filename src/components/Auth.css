@@ -184,3 +184,30 @@
     font-size: 1.5rem;
   }
 }
+
+/* Google Sign-In divider */
+.auth-divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 10px 0;
+  color: #adb5bd;
+  font-size: 0.85rem;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.auth-divider span {
+  padding: 0 12px;
+}
+
+/* Centre the Google button */
+.google-btn-wrapper {
+  display: flex;
+  justify-content: center;
+}

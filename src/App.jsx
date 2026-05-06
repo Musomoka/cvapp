@@ -333,7 +333,12 @@ function App() {
         </div>
         
         <div className="preview-section">
-          <CVPreview data={cvData} template={selectedTemplate} />
+          <CVPreview
+            data={cvData}
+            template={selectedTemplate}
+            isAuthenticated={isAuthenticated}
+            onLoginRequired={() => setShowLogin(true)}
+          />
         </div>
       </div>
 

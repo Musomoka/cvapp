@@ -7,7 +7,7 @@ import './templates/MinimalTemplate.css';
 import './templates/CreativeTemplate.css';
 import './templates/ProfessionalTemplate.css';
 
-function CVPreview({ data, template = 'modern' }) {
+function CVPreview({ data, template = 'modern', isAuthenticated = false, onLoginRequired }) {
   const [isExporting, setIsExporting] = useState(false);
 
   const formatDate = (dateString) => {
@@ -19,6 +19,10 @@ function CVPreview({ data, template = 'modern' }) {
   };
 
   const handleExportPDF = async () => {
+    if (!isAuthenticated) {
+      onLoginRequired?.();
+      return;
+    }
     setIsExporting(true);
     const cvElement = document.getElementById('cv-content');
     
@@ -103,8 +107,9 @@ function CVPreview({ data, template = 'modern' }) {
           onClick={handleExportPDF} 
           className="print-btn"
           disabled={isExporting}
+          title={!isAuthenticated ? 'Log in to download your CV' : ''}
         >
-          {isExporting ? 'Exporting...' : '📄 Download PDF'}
+          {isExporting ? 'Exporting...' : isAuthenticated ? '📄 Download PDF' : '🔒 Download PDF'}
         </button>
       </div>
       

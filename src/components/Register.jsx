@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
+import GoogleSignInButton from './GoogleSignInButton';
 import './Auth.css';
 
 function Register({ onClose, onSwitchToLogin }) {
@@ -9,7 +10,19 @@ function Register({ onClose, onSwitchToLogin }) {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const { register } = useAuth();
+  const { register, googleLogin } = useAuth();
+
+  const handleGoogleSuccess = async (credential) => {
+    setError('');
+    setIsLoading(true);
+    const result = await googleLogin(credential);
+    setIsLoading(false);
+    if (result.success) {
+      onClose();
+    } else {
+      setError(result.error);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -110,6 +123,12 @@ function Register({ onClose, onSwitchToLogin }) {
             {isLoading ? 'Creating account...' : 'Sign Up'}
           </button>
         </form>
+
+        <div className="auth-divider">
+          <span>or</span>
+        </div>
+
+        <GoogleSignInButton onSuccess={handleGoogleSuccess} onError={(msg) => setError(msg)} />
 
         <div className="auth-footer">
           <p>

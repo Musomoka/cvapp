@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { OAuth2Client } from 'google-auth-library';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -37,6 +38,9 @@ function saveUsers(data) {
 }
 
 export { loadUsers, saveUsers, JWT_SECRET };
+
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
+const googleClient = GOOGLE_CLIENT_ID ? new OAuth2Client(GOOGLE_CLIENT_ID) : null;
 
 // Middleware to verify JWT token
 export const authenticateToken = (req, res, next) => {
@@ -238,6 +242,70 @@ router.get('/me', authenticateToken, (req, res) => {
 
   const { password: _, ...userWithoutPassword } = user;
   res.json({ success: true, user: userWithoutPassword });
+});
+
+// Google OAuth sign-in
+router.post('/google', async (req, res) => {
+  try {
+    const { credential } = req.body;
+    if (!credential) {
+      return res.status(400).json({ error: 'Google credential is required' });
+    }
+    if (!googleClient) {
+      return res.status(503).json({ error: 'Google Sign-In is not configured on this server' });
+    }
+
+    // Verify the Google ID token
+    const ticket = await googleClient.verifyIdToken({
+      idToken: credential,
+      audience: GOOGLE_CLIENT_ID,
+    });
+    const payload = ticket.getPayload();
+    const { sub: googleId, email, name, picture } = payload;
+
+    if (!email) {
+      return res.status(400).json({ error: 'Google account has no email address' });
+    }
+
+    const store = loadUsers();
+    let user = store.users.find(u => u.email === email);
+
+    if (!user) {
+      // New user — register via Google
+      user = {
+        id: store.nextId++,
+        name: name || email.split('@')[0],
+        email,
+        googleId,
+        picture: picture || null,
+        isAdmin: store.users.length === 0, // first user ever becomes admin
+        createdAt: new Date().toISOString(),
+      };
+      store.users.push(user);
+    } else {
+      // Existing user — update Google-linked fields
+      user.googleId = googleId;
+      if (picture && !user.picture) user.picture = picture;
+    }
+
+    if (user.suspended) {
+      return res.status(403).json({ error: 'Account is suspended' });
+    }
+
+    saveUsers(store);
+
+    const token = jwt.sign(
+      { id: user.id, email: user.email, isAdmin: user.isAdmin || false },
+      JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+
+    const { password: _, ...userWithoutPassword } = user;
+    res.json({ success: true, user: userWithoutPassword, token });
+  } catch (error) {
+    console.error('Google auth error:', error);
+    res.status(401).json({ error: 'Invalid Google credential' });
+  }
 });
 
 export default router;
