@@ -1,0 +1,115 @@
+{
+  "summary": {
+    "displayName": "Summary",
+    "keywords": [
+      "summary",
+      "professional summary",
+      "career summary",
+      "objective",
+      "career objective",
+      "personal statement",
+      "profile",
+      "about me"
+    ]
+  },
+  "contactInfo": {
+    "displayName": "Contact Information",
+    "keywords": [
+      "contact",
+      "contact information",
+      "personal details",
+      "personal info",
+      "details"
+    ]
+  },
+  "experience": {
+    "displayName": "Work Experience",
+    "keywords": [
+      "experience",
+      "work experience",
+      "professional experience",
+      "employment history",
+      "career history",
+      "work history",
+      "relevant experience"
+    ]
+  },
+  "education": {
+    "displayName": "Education",
+    "keywords": [
+      "education",
+      "education & training",
+      "academic background",
+      "academic qualifications",
+      "qualifications"
+    ]
+  },
+  "skills": {
+    "displayName": "Skills",
+    "keywords": [
+      "skills",
+      "technical skills",
+      "professional skills",
+      "core competencies",
+      "key skills",
+      "expertise",
+      "technologies",
+      "languages"
+    ]
+  },
+  "projects": {
+    "displayName": "Projects",
+    "keywords": [
+      "projects",
+      "personal projects",
+      "key projects",
+      "portfolio",
+      "relevant projects"
+    ]
+  },
+  "certifications": {
+    "displayName": "Certifications",
+    "keywords": [
+      "certifications",
+      "licenses & certifications",
+      "professional certifications",
+      "training & certifications",
+      "licenses"
+    ]
+  },
+  "publications": {
+    "displayName": "Publications",
+    "keywords": [
+      "publications",
+      "research",
+      "research experience",
+      "papers",
+      "presentations"
+    ]
+  },
+  "awards": {
+    "displayName": "Awards and Honors",
+    "keywords": [
+      "awards",
+      "honors",
+      "honors & awards",
+      "achievements",
+      "accomplishments"
+    ]
+  },
+  "references": {
+    "displayName": "References",
+    "keywords": [
+      "references",
+      "referees"
+    ]
+  },
+  "volunteer": {
+    "displayName": "Volunteer Experience",
+    "keywords": [
+      "volunteer experience",
+      "volunteering",
+      "community involvement"
+    ]
+  }
+}

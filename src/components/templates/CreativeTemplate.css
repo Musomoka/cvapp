@@ -1,0 +1,235 @@
+/* Creative Template - Bold sidebar design with vibrant colors */
+.creative-template {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  display: flex;
+  min-height: 100%;
+  background: #ffffff;
+}
+
+.creative-sidebar {
+  width: 280px;
+  background: linear-gradient(135deg, #c0b8b7 0%, #80eaff 100%);
+  color: white;
+  padding: 40px 30px;
+  flex-shrink: 0;
+}
+
+.creative-profile h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0 0 30px 0;
+  color: white;
+  line-height: 1.2;
+  word-wrap: break-word;
+}
+
+.creative-contact {
+  margin-bottom: 35px;
+}
+
+.creative-contact h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 15px 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: white;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+  padding-bottom: 8px;
+}
+
+.contact-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 12px;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  word-wrap: break-word;
+}
+
+.contact-icon {
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.creative-skills-section {
+  margin-top: 35px;
+}
+
+.creative-skills-section h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 15px 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: white;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+  padding-bottom: 8px;
+}
+
+.creative-skills {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.creative-skill {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  backdrop-filter: blur(10px);
+}
+
+.creative-main {
+  flex: 1;
+  padding: 40px 45px;
+  background: white;
+}
+
+.creative-section {
+  margin-bottom: 35px;
+}
+
+.creative-section h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #e74c3c;
+  margin: 0 0 20px 0;
+  position: relative;
+  padding-bottom: 10px;
+}
+
+.creative-section h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 60px;
+  height: 3px;
+  background: #e74c3c;
+}
+
+.creative-section p {
+  color: #34495e;
+  line-height: 1.7;
+  margin: 0;
+}
+
+.creative-item {
+  margin-bottom: 25px;
+  padding-bottom: 25px;
+  border-bottom: 1px solid #ecf0f1;
+}
+
+.creative-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.creative-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+  gap: 20px;
+}
+
+.creative-item-header h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0 0 5px 0;
+}
+
+.creative-company {
+  font-size: 0.95rem;
+  color: #7f8c8d;
+  margin: 0;
+  font-style: italic;
+}
+
+.creative-date {
+  font-size: 0.85rem;
+  color: #95a5a6;
+  white-space: nowrap;
+  padding: 4px 12px;
+  background: #ecf0f1;
+  border-radius: 12px;
+  font-weight: 500;
+}
+
+.creative-description {
+  font-size: 0.9rem;
+  color: #34495e;
+  line-height: 1.7;
+  margin: 12px 0 0 0;
+}
+
+/* Print styles */
+@media print {
+  .creative-template {
+    display: block;
+  }
+  
+  .creative-sidebar {
+    width: 100%;
+    padding: 20px;
+    background: #e74c3c !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  
+  .creative-main {
+    padding: 20px;
+  }
+  
+  .creative-profile h1 {
+    font-size: 20pt;
+  }
+  
+  .creative-section h2 {
+    font-size: 14pt;
+  }
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .creative-template {
+    flex-direction: column;
+  }
+  
+  .creative-sidebar {
+    width: 100%;
+    padding: 30px 25px;
+  }
+  
+  .creative-main {
+    padding: 30px 25px;
+  }
+}
+
+@media (max-width: 768px) {
+  .creative-sidebar {
+    padding: 25px 20px;
+  }
+  
+  .creative-profile h1 {
+    font-size: 1.5rem;
+  }
+  
+  .creative-main {
+    padding: 25px 20px;
+  }
+  
+  .creative-item-header {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .creative-date {
+    align-self: flex-start;
+  }
+}

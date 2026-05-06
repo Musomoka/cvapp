@@ -1,0 +1,216 @@
+/* =============================================
+   Retail Template — Gold & Navy two-column layout
+   ============================================= */
+
+.retail-template {
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  color: #1a2c3e;
+  line-height: 1.45;
+  background: #fff;
+  font-size: 13px;
+}
+
+/* ---- HEADER ---- */
+.retail-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 3px solid #f0b429;
+  padding-bottom: 1.2rem;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+}
+
+.retail-name-block h1 {
+  font-size: 1.9rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: #0a2b3e;
+  margin-bottom: 0.3rem;
+  text-transform: uppercase;
+}
+
+.retail-tagline {
+  display: inline-block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #f0b429;
+  background: #fef6e0;
+  padding: 3px 14px;
+  border-radius: 30px;
+  margin-top: 4px;
+}
+
+.retail-contact-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 10px;
+  font-size: 0.75rem;
+  color: #4e6e8a;
+}
+
+.retail-contact-row span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.retail-summary-box {
+  max-width: 55%;
+  background: #f9fafc;
+  padding: 0.9rem 1.1rem;
+  border-radius: 16px;
+  font-size: 0.82rem;
+  color: #2c4b66;
+  line-height: 1.55;
+  border-left: 4px solid #f0b429;
+}
+
+.retail-summary-box strong {
+  display: block;
+  margin-bottom: 4px;
+  color: #0a2b3e;
+  font-size: 0.8rem;
+}
+
+/* ---- TWO-COLUMN BODY ---- */
+.retail-body {
+  display: grid;
+  grid-template-columns: 1fr 2.2fr;
+  gap: 1.8rem;
+}
+
+/* ---- SECTION TITLES ---- */
+.retail-section {
+  margin-bottom: 1.6rem;
+}
+
+.retail-section-title {
+  font-weight: 700;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: #1f4e6e;
+  border-left: 4px solid #f0b429;
+  padding-left: 10px;
+  margin-bottom: 0.8rem;
+}
+
+/* ---- LEFT PANEL ---- */
+.retail-skills-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.retail-skills-list li {
+  background: #f1f5f9;
+  padding: 5px 12px;
+  border-radius: 30px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #1e4663;
+}
+
+/* ---- RIGHT PANEL — JOBS ---- */
+.retail-job {
+  margin-bottom: 1.4rem;
+}
+
+.retail-job-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 2px;
+}
+
+.retail-job-title {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #0b3b4f;
+}
+
+.retail-date-badge {
+  font-size: 0.7rem;
+  color: #6f8faa;
+  background: #eef2f5;
+  padding: 2px 8px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+.retail-company {
+  font-weight: 500;
+  color: #f0b429;
+  font-size: 0.82rem;
+  margin-bottom: 5px;
+}
+
+.retail-job-bullets {
+  list-style: none;
+  padding: 0;
+  margin: 6px 0 0 0;
+}
+
+.retail-job-bullets li {
+  font-size: 0.8rem;
+  padding-left: 16px;
+  position: relative;
+  margin-bottom: 5px;
+  line-height: 1.45;
+  color: #2b4c6c;
+}
+
+.retail-job-bullets li::before {
+  content: "▹";
+  position: absolute;
+  left: 0;
+  color: #f0b429;
+  font-weight: 600;
+}
+
+/* ---- EDUCATION ---- */
+.retail-edu-item {
+  margin-bottom: 1rem;
+}
+
+.retail-edu-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 2px;
+}
+
+.retail-edu-degree {
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: #0b3b4f;
+}
+
+.retail-edu-school {
+  font-size: 0.78rem;
+  color: #566f86;
+}
+
+.retail-edu-description {
+  font-size: 0.78rem;
+  color: #2b4c6c;
+  margin-top: 3px;
+  padding-left: 16px;
+  position: relative;
+}
+
+.retail-edu-description::before {
+  content: "▹";
+  position: absolute;
+  left: 0;
+  color: #f0b429;
+  font-weight: 600;
+}

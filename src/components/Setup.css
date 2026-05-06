@@ -1,0 +1,163 @@
+.setup-section {
+  background: white;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.setup-header {
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.setup-header h2 {
+  color: #333;
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+}
+
+.setup-subtitle {
+  color: #6c757d;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.setup-content {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.setup-option {
+  background: #f8f9fa;
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  padding: 25px;
+  transition: all 0.3s ease;
+}
+
+.setup-option:hover {
+  border-color: #667eea;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+}
+
+.option-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.option-icon {
+  font-size: 2rem;
+}
+
+.option-header h3 {
+  color: #333;
+  font-size: 1.3rem;
+  margin: 0;
+}
+
+.option-description {
+  color: #6c757d;
+  font-size: 0.95rem;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.setup-divider {
+  text-align: center;
+  position: relative;
+  margin: 20px 0;
+}
+
+.setup-divider::before,
+.setup-divider::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 45%;
+  height: 1px;
+  background: #dee2e6;
+}
+
+.setup-divider::before {
+  left: 0;
+}
+
+.setup-divider::after {
+  right: 0;
+}
+
+.setup-divider span {
+  background: white;
+  padding: 0 15px;
+  color: #6c757d;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.setup-footer {
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #e9ecef;
+}
+
+.setup-tip {
+  background: #fff3cd;
+  border: 1px solid #ffc107;
+  border-radius: 8px;
+  padding: 15px;
+  margin: 0;
+  color: #856404;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.setup-tip strong {
+  color: #664d03;
+}
+
+/* Adjust nested components */
+.setup-option .section {
+  background: white;
+  box-shadow: none;
+  padding: 0;
+  margin-bottom: 0;
+}
+
+.setup-option .section h2 {
+  display: none; /* Hide redundant headers */
+}
+
+.setup-option .upload-description {
+  display: none; /* Hide redundant descriptions */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .setup-section {
+    padding: 20px;
+  }
+
+  .setup-header h2 {
+    font-size: 1.5rem;
+  }
+
+  .setup-subtitle {
+    font-size: 0.9rem;
+  }
+
+  .option-header h3 {
+    font-size: 1.1rem;
+  }
+
+  .option-icon {
+    font-size: 1.5rem;
+  }
+
+  .setup-divider::before,
+  .setup-divider::after {
+    width: 40%;
+  }
+}
