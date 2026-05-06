@@ -309,18 +309,18 @@
 .preview-section {
   position: sticky;
   top: 20px;
-  max-height: calc(100vh - 40px);
+  /* tall CVs scroll within the column */
+  max-height: calc(100vh - 20px);
   overflow-y: auto;
-  /* subtle scrollbar */
   scrollbar-width: thin;
   scrollbar-color: rgba(102,126,234,0.4) transparent;
 }
 
 .preview-section::-webkit-scrollbar {
-  width: 6px;
+  width: 5px;
 }
 .preview-section::-webkit-scrollbar-thumb {
-  background: rgba(102,126,234,0.4);
+  background: rgba(102,126,234,0.35);
   border-radius: 3px;
 }
 
@@ -334,6 +334,10 @@
     position: static;
     max-height: none;
     overflow-y: visible;
+  }
+
+  .steps-wrapper {
+    padding: 0 15px;
   }
   
   .app-header h1 {

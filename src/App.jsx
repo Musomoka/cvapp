@@ -258,9 +258,12 @@ function App() {
         </div>
       </header>
       
+      <div className="steps-wrapper">
+        <Steps currentStep={currentStep} onStepClick={setCurrentStep} />
+      </div>
+
       <div className="app-container">
         <div className="form-section">
-          <Steps currentStep={currentStep} onStepClick={setCurrentStep} />
           
           {currentStep === 1 && (
             <Setup
