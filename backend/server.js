@@ -100,11 +100,23 @@ app.post('/api/parse-cv', upload.single('file'), async (req, res) => {
 
     console.log(`Extracted ${cvText.length} characters from CV`);
 
-    // Step 2: Parse CV using OpenAI
-    const parsedData = await parseCV(cvText);
+    // Step 2: Cap text to avoid sending huge documents to the AI.
+    // CVs are typically 1–3 pages (~3 000–9 000 chars). Anything beyond
+    // 15 000 chars is almost certainly not relevant CV content.
+    const MAX_CV_CHARS = 15000;
+    const textForAI = cvText.length > MAX_CV_CHARS
+      ? cvText.slice(0, MAX_CV_CHARS)
+      : cvText;
 
-    // Step 3: Calculate usage stats
-    const inputTokens = estimateTokens(cvText);
+    if (cvText.length > MAX_CV_CHARS) {
+      console.log(`Text truncated from ${cvText.length} to ${MAX_CV_CHARS} chars before AI call`);
+    }
+
+    // Step 3: Parse CV using DeepSeek
+    const parsedData = await parseCV(textForAI);
+
+    // Step 4: Calculate usage stats
+    const inputTokens = estimateTokens(textForAI);
     const outputTokens = estimateTokens(JSON.stringify(parsedData));
     const estimatedCost = estimateCost(inputTokens, outputTokens);
 
@@ -124,12 +136,12 @@ app.post('/api/parse-cv', upload.single('file'), async (req, res) => {
       success: true,
     });
 
-    // Step 4: Clean up uploaded file
+    // Step 5: Clean up uploaded file
     if (fs.existsSync(filePath)) {
       fs.unlinkSync(filePath);
     }
 
-    // Step 5: Return parsed data
+    // Step 6: Return parsed data
     res.json({
       success: true,
       data: parsedData,
@@ -139,7 +151,7 @@ app.post('/api/parse-cv', upload.single('file'), async (req, res) => {
         extractedTextLength: cvText.length,
         estimatedTokens: inputTokens + outputTokens,
         estimatedCost: estimatedCost,
-        model: process.env.OPENAI_MODEL || 'gpt-3.5-turbo',
+        model: process.env.AI_MODEL || 'deepseek-chat',
       },
     });
 
