@@ -341,6 +341,7 @@ function App() {
             template={selectedTemplate}
             isAuthenticated={isAuthenticated}
             onLoginRequired={() => setShowLogin(true)}
+            currentStep={currentStep}
           />
         </div>
       </div>

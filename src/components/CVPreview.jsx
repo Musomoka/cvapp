@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import './CVPreview.css';
@@ -7,8 +7,26 @@ import './templates/MinimalTemplate.css';
 import './templates/CreativeTemplate.css';
 import './templates/ProfessionalTemplate.css';
 
-function CVPreview({ data, template = 'modern', isAuthenticated = false, onLoginRequired }) {
+// Maps step number → data-cv-section attribute value (null = scroll to top)
+const STEP_SECTIONS = { 1: null, 2: 'personal-info', 3: 'education', 4: 'experience', 5: 'skills' };
+
+function CVPreview({ data, template = 'modern', isAuthenticated = false, onLoginRequired, currentStep }) {
   const [isExporting, setIsExporting] = useState(false);
+
+  useEffect(() => {
+    const sectionKey = STEP_SECTIONS[currentStep];
+    const scrollContainer = document.querySelector('.preview-section');
+    if (!sectionKey) {
+      if (scrollContainer) scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+    const target = document.querySelector(`[data-cv-section="${sectionKey}"]`);
+    if (target && scrollContainer) {
+      const containerTop = scrollContainer.getBoundingClientRect().top;
+      const targetTop = target.getBoundingClientRect().top;
+      scrollContainer.scrollBy({ top: targetTop - containerTop - 16, behavior: 'smooth' });
+    }
+  }, [currentStep]);
 
   const formatDate = (dateString) => {
     if (!dateString) return '';
@@ -127,7 +145,7 @@ function CVPreview({ data, template = 'modern', isAuthenticated = false, onLogin
 function ModernTemplate({ data, formatDate }) {
   return (
     <div className="modern-template">
-      <div className="cv-header">
+      <div className="cv-header" data-cv-section="personal-info">
         <h1 className="cv-name">{data.personalInfo.fullName || 'Your Name'}</h1>
         <div className="cv-contact">
           {data.personalInfo.email && <span>✉️ {data.personalInfo.email}</span>}
@@ -144,7 +162,7 @@ function ModernTemplate({ data, formatDate }) {
       )}
 
       {data.experience.length > 0 && (
-        <div className="cv-section">
+        <div className="cv-section" data-cv-section="experience">
           <h2 className="cv-section-title">Work Experience</h2>
           {data.experience.map((exp) => (
             <div key={exp.id} className="cv-item">
@@ -166,7 +184,7 @@ function ModernTemplate({ data, formatDate }) {
       )}
 
       {data.education.length > 0 && (
-        <div className="cv-section">
+        <div className="cv-section" data-cv-section="education">
           <h2 className="cv-section-title">Education</h2>
           {data.education.map((edu) => (
             <div key={edu.id} className="cv-item">
@@ -190,7 +208,7 @@ function ModernTemplate({ data, formatDate }) {
       )}
 
       {data.skills.length > 0 && (
-        <div className="cv-section">
+        <div className="cv-section" data-cv-section="skills">
           <h2 className="cv-section-title">Skills</h2>
           <div className="cv-skills">
             {data.skills.map((skill) => (
@@ -216,7 +234,7 @@ function ModernTemplate({ data, formatDate }) {
 function ClassicTemplate({ data, formatDate }) {
   return (
     <div className="classic-template">
-      <div className="classic-header">
+      <div className="classic-header" data-cv-section="personal-info">
         <h1>{data.personalInfo.fullName || 'Your Name'}</h1>
         <div className="classic-contact">
           {data.personalInfo.email && <span>{data.personalInfo.email}</span>}
@@ -234,7 +252,7 @@ function ClassicTemplate({ data, formatDate }) {
       )}
 
       {data.experience.length > 0 && (
-        <div className="classic-section">
+        <div className="classic-section" data-cv-section="experience">
           <h2>PROFESSIONAL EXPERIENCE</h2>
           {data.experience.map((exp) => (
             <div key={exp.id} className="classic-item">
@@ -250,7 +268,7 @@ function ClassicTemplate({ data, formatDate }) {
       )}
 
       {data.education.length > 0 && (
-        <div className="classic-section">
+        <div className="classic-section" data-cv-section="education">
           <h2>EDUCATION</h2>
           {data.education.map((edu) => (
             <div key={edu.id} className="classic-item">
@@ -265,7 +283,7 @@ function ClassicTemplate({ data, formatDate }) {
       )}
 
       {data.skills.length > 0 && (
-        <div className="classic-section">
+        <div className="classic-section" data-cv-section="skills">
           <h2>SKILLS</h2>
           <p>
             {data.skills.map((skill, index) => (
@@ -282,7 +300,7 @@ function ClassicTemplate({ data, formatDate }) {
 function MinimalTemplate({ data, formatDate }) {
   return (
     <div className="minimal-template">
-      <div className="minimal-header">
+      <div className="minimal-header" data-cv-section="personal-info">
         <h1>{data.personalInfo.fullName || 'Your Name'}</h1>
         {(data.personalInfo.email || data.personalInfo.phone || data.personalInfo.location) && (
           <div className="minimal-contact">
@@ -300,7 +318,7 @@ function MinimalTemplate({ data, formatDate }) {
       )}
 
       {data.experience.length > 0 && (
-        <div className="minimal-section">
+        <div className="minimal-section" data-cv-section="experience">
           <h2>Experience</h2>
           {data.experience.map((exp) => (
             <div key={exp.id} className="minimal-item">
@@ -318,7 +336,7 @@ function MinimalTemplate({ data, formatDate }) {
       )}
 
       {data.education.length > 0 && (
-        <div className="minimal-section">
+        <div className="minimal-section" data-cv-section="education">
           <h2>Education</h2>
           {data.education.map((edu) => (
             <div key={edu.id} className="minimal-item">
@@ -336,7 +354,7 @@ function MinimalTemplate({ data, formatDate }) {
       )}
 
       {data.skills.length > 0 && (
-        <div className="minimal-section">
+        <div className="minimal-section" data-cv-section="skills">
           <h2>Skills</h2>
           <div className="minimal-skills">
             {data.skills.map((skill) => (
@@ -354,7 +372,7 @@ function CreativeTemplate({ data, formatDate }) {
   return (
     <div className="creative-template">
       <div className="creative-sidebar">
-        <div className="creative-profile">
+        <div className="creative-profile" data-cv-section="personal-info">
           <h1>{data.personalInfo.fullName || 'Your Name'}</h1>
         </div>
 
@@ -383,7 +401,7 @@ function CreativeTemplate({ data, formatDate }) {
         )}
 
         {data.skills.length > 0 && (
-          <div className="creative-skills-section">
+          <div className="creative-skills-section" data-cv-section="skills">
             <h3>Skills</h3>
             <div className="creative-skills">
               {data.skills.map((skill) => (
@@ -403,7 +421,7 @@ function CreativeTemplate({ data, formatDate }) {
         )}
 
         {data.experience.length > 0 && (
-          <div className="creative-section">
+          <div className="creative-section" data-cv-section="experience">
             <h2>Experience</h2>
             {data.experience.map((exp) => (
               <div key={exp.id} className="creative-item">
@@ -423,7 +441,7 @@ function CreativeTemplate({ data, formatDate }) {
         )}
 
         {data.education.length > 0 && (
-          <div className="creative-section">
+          <div className="creative-section" data-cv-section="education">
             <h2>Education</h2>
             {data.education.map((edu) => (
               <div key={edu.id} className="creative-item">
@@ -450,7 +468,7 @@ function CreativeTemplate({ data, formatDate }) {
 function ProfessionalTemplate({ data, formatDate }) {
   return (
     <div className="professional-template">
-      <div className="professional-header">
+      <div className="professional-header" data-cv-section="personal-info">
         <h1>{data.personalInfo.fullName || 'Your Name'}</h1>
         <div className="professional-contact">
           {data.personalInfo.email && <span>{data.personalInfo.email}</span>}
@@ -469,7 +487,7 @@ function ProfessionalTemplate({ data, formatDate }) {
           )}
 
           {data.experience.length > 0 && (
-            <div className="professional-section">
+            <div className="professional-section" data-cv-section="experience">
               <h2>Professional Experience</h2>
               {data.experience.map((exp) => (
                 <div key={exp.id} className="professional-item">
@@ -491,7 +509,7 @@ function ProfessionalTemplate({ data, formatDate }) {
 
         <div className="professional-sidebar">
           {data.education.length > 0 && (
-            <div className="professional-section">
+            <div className="professional-section" data-cv-section="education">
               <h2>Education</h2>
               {data.education.map((edu) => (
                 <div key={edu.id} className="professional-item-compact">
@@ -507,7 +525,7 @@ function ProfessionalTemplate({ data, formatDate }) {
           )}
 
           {data.skills.length > 0 && (
-            <div className="professional-section">
+            <div className="professional-section" data-cv-section="skills">
               <h2>Core Competencies</h2>
               <ul className="professional-skills">
                 {data.skills.map((skill) => (
