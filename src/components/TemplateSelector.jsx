@@ -38,6 +38,13 @@ const templates = [
     preview: 'Elegant two-column layout'
   },
   {
+    id: 'executive',
+    name: 'Executive',
+    description: 'Teal header professional design with clean sections',
+    color: '#17a2b8',
+    preview: 'Teal-themed professional layout'
+  },
+  {
     id: 'retail',
     name: 'Retail',
     description: 'Gold & navy two-column layout with skill badges and bullet points',

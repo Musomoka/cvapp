@@ -1,0 +1,171 @@
+/* Executive Template - Professional teal-themed CV */
+
+.executive-template {
+  background: white;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
+
+/* Header */
+.executive-header {
+  border-bottom: 3px solid #17a2b8;
+  padding-bottom: 12px;
+  margin-bottom: 16px;
+}
+
+.executive-name {
+  color: #17a2b8;
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0 0 8px;
+  letter-spacing: 0.5px;
+}
+
+.executive-contact-line {
+  display: flex;
+  gap: 20px;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.executive-contact-line span {
+  display: inline;
+}
+
+/* Sections */
+.executive-section {
+  margin-bottom: 16px;
+}
+
+.executive-section-title {
+  color: #17a2b8;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin: 0 0 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.executive-summary {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #444;
+  margin: 0;
+}
+
+/* Work Experience */
+.executive-job {
+  margin-bottom: 14px;
+}
+
+.executive-job-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 6px;
+}
+
+.executive-job-title-company {
+  flex: 1;
+}
+
+.executive-job-title {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #222;
+  margin: 0 0 2px;
+}
+
+.executive-company {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #555;
+  margin: 0;
+}
+
+.executive-job-dates {
+  font-size: 0.85rem;
+  color: #888;
+  white-space: nowrap;
+  margin-left: 12px;
+}
+
+.executive-job-description {
+  list-style: disc;
+  margin: 6px 0 0 18px;
+  padding: 0;
+  font-size: 0.9rem;
+  color: #444;
+  line-height: 1.4;
+}
+
+.executive-job-description li {
+  margin-bottom: 3px;
+}
+
+/* Education */
+.executive-education {
+  margin-bottom: 10px;
+}
+
+.executive-edu-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 4px;
+}
+
+.executive-edu-header h3 {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #222;
+  margin: 0;
+}
+
+.executive-edu-header span {
+  font-size: 0.85rem;
+  color: #888;
+  white-space: nowrap;
+  margin-left: 12px;
+}
+
+.executive-edu-school {
+  font-size: 0.9rem;
+  color: #555;
+  margin: 0;
+}
+
+/* Skills Grid */
+.executive-skills-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px 16px;
+}
+
+.executive-skill {
+  font-size: 0.9rem;
+  color: #444;
+  padding: 4px 0;
+  display: flex;
+  align-items: center;
+}
+
+.executive-skill::before {
+  content: '•';
+  color: #17a2b8;
+  font-weight: bold;
+  margin-right: 8px;
+}
+
+/* Print styles */
+@media print {
+  .executive-template {
+    padding: 0;
+  }
+  
+  .executive-section {
+    margin-bottom: 12px;
+  }
+}

@@ -6,6 +6,7 @@ import './templates/ClassicTemplate.css';
 import './templates/MinimalTemplate.css';
 import './templates/CreativeTemplate.css';
 import './templates/ProfessionalTemplate.css';
+import './templates/ExecutiveTemplate.css';
 
 // Maps step number → data-cv-section attribute value (null = scroll to top)
 const STEP_SECTIONS = { 1: null, 2: 'personal-info', 3: 'education', 4: 'experience', 5: 'skills' };
@@ -115,6 +116,8 @@ function CVPreview({ data, template = 'modern', isAuthenticated = false, onLogin
         return <CreativeTemplate data={data} formatDate={formatDate} />;
       case 'professional':
         return <ProfessionalTemplate data={data} formatDate={formatDate} />;
+      case 'executive':
+        return <ExecutiveTemplate data={data} formatDate={formatDate} />;
       default:
         return <ModernTemplate data={data} formatDate={formatDate} />;
     }
@@ -539,6 +542,81 @@ function ProfessionalTemplate({ data, formatDate }) {
           )}
         </div>
       </div>
+    </div>
+  );
+}
+
+// Executive Template Component - Professional with teal header
+function ExecutiveTemplate({ data, formatDate }) {
+  return (
+    <div className="executive-template">
+      <div className="executive-header" data-cv-section="personal-info">
+        <h1 className="executive-name">{data.personalInfo.fullName || 'Your Name'}</h1>
+        <div className="executive-contact-line">
+          {data.personalInfo.location && <span>{data.personalInfo.location}</span>}
+          {data.personalInfo.phone && <span>{data.personalInfo.phone}</span>}
+          {data.personalInfo.email && <span>{data.personalInfo.email}</span>}
+        </div>
+      </div>
+
+      {data.personalInfo.summary && (
+        <div className="executive-section">
+          <h2 className="executive-section-title">PERSONAL SUMMARY</h2>
+          <p className="executive-summary">{data.personalInfo.summary}</p>
+        </div>
+      )}
+
+      {data.experience.length > 0 && (
+        <div className="executive-section">
+          <h2 className="executive-section-title">WORK EXPERIENCE</h2>
+          {data.experience.map((exp) => (
+            <div key={exp.id} className="executive-job">
+              <div className="executive-job-header">
+                <div className="executive-job-title-company">
+                  <h3 className="executive-job-title">{exp.position || 'Position'}</h3>
+                  <p className="executive-company">{exp.company || 'Company'}</p>
+                </div>
+                <span className="executive-job-dates">
+                  {formatDate(exp.startDate)} to {formatDate(exp.endDate)}
+                </span>
+              </div>
+              {exp.description && (
+                <ul className="executive-job-description">
+                  {exp.description.split('\n').map((line, idx) => (
+                    line.trim() && <li key={idx}>{line.trim()}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {data.education.length > 0 && (
+        <div className="executive-section">
+          <h2 className="executive-section-title">EDUCATION</h2>
+          {data.education.map((edu) => (
+            <div key={edu.id} className="executive-education">
+              <div className="executive-edu-header">
+                <h3>{edu.degree || 'Degree'}{edu.field && ` in ${edu.field}`}</h3>
+                <span>{formatDate(edu.startDate)} to {formatDate(edu.endDate)}</span>
+              </div>
+              <p className="executive-edu-school">{edu.school || 'School'}</p>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {data.skills.length > 0 && (
+        <div className="executive-section">
+          <h2 className="executive-section-title">SKILLS</h2>
+          <div className="executive-skills-grid">
+            {data.skills.map((skill) => (
+              skill.name && <div key={skill.id} className="executive-skill">{skill.name}</div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
