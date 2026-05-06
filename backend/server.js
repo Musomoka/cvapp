@@ -7,8 +7,10 @@ import fs from 'fs';
 import { fileURLToPath } from 'url';
 import { extractTextFromFile } from './fileExtractor.js';
 import { parseCV, estimateTokens, estimateCost } from './parseService.js';
+import { appendParseLog } from './dataStore.js';
 import authRouter from './routes/auth.js';
 import cvsRouter from './routes/cvs.js';
+import adminRouter from './routes/admin.js';
 
 // ES module compatibility
 const __filename = fileURLToPath(import.meta.url);
@@ -30,6 +32,7 @@ app.use(express.json());
 // Routes
 app.use('/api/auth', authRouter);
 app.use('/api/cvs', cvsRouter);
+app.use('/api/admin', adminRouter);
 
 // Configure multer for file uploads
 const storage = multer.diskStorage({
@@ -107,6 +110,20 @@ app.post('/api/parse-cv', upload.single('file'), async (req, res) => {
 
     console.log(`Parsing complete. Estimated cost: $${estimatedCost.toFixed(4)}`);
 
+    // Log the parse event for admin
+    appendParseLog({
+      timestamp: new Date().toISOString(),
+      filename: req.file.originalname,
+      fileSize: req.file.size,
+      extractedTextLength: cvText.length,
+      inputTokens,
+      outputTokens,
+      estimatedTokens: inputTokens + outputTokens,
+      estimatedCost,
+      model: process.env.AI_MODEL || 'deepseek-chat',
+      success: true,
+    });
+
     // Step 4: Clean up uploaded file
     if (fs.existsSync(filePath)) {
       fs.unlinkSync(filePath);
@@ -128,6 +145,21 @@ app.post('/api/parse-cv', upload.single('file'), async (req, res) => {
 
   } catch (error) {
     console.error('Error parsing CV:', error);
+
+    // Log the failed parse
+    appendParseLog({
+      timestamp: new Date().toISOString(),
+      filename: req.file?.originalname || 'unknown',
+      fileSize: req.file?.size || 0,
+      extractedTextLength: 0,
+      inputTokens: 0,
+      outputTokens: 0,
+      estimatedTokens: 0,
+      estimatedCost: 0,
+      model: process.env.AI_MODEL || 'deepseek-chat',
+      success: false,
+      error: error.message,
+    });
 
     // Clean up file on error
     if (filePath && fs.existsSync(filePath)) {

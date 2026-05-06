@@ -10,6 +10,7 @@ import CVPreview from './components/CVPreview';
 import Login from './components/Login';
 import Register from './components/Register';
 import Account from './components/Account';
+import Admin from './components/Admin';
 import SavedCVs from './components/SavedCVs';
 import SaveCVDialog from './components/SaveCVDialog';
 import './App.css';
@@ -23,6 +24,7 @@ function App() {
   const [showAccount, setShowAccount] = useState(false);
   const [showSavedCVs, setShowSavedCVs] = useState(false);
   const [showSaveDialog, setShowSaveDialog] = useState(false);
+  const [showAdmin, setShowAdmin] = useState(false);
   const idCounter = useRef(1);
   
   const generateId = () => {
@@ -202,6 +204,15 @@ function App() {
           <div className="header-right">
             {isAuthenticated ? (
               <>
+                {user?.isAdmin && (
+                  <button
+                    className="header-btn admin-btn"
+                    onClick={() => setShowAdmin(true)}
+                    title="Admin Panel"
+                  >
+                    🛡️ Admin
+                  </button>
+                )}
                 <button 
                   className="header-btn saved-cvs-btn"
                   onClick={() => setShowSavedCVs(true)}
@@ -368,6 +379,10 @@ function App() {
             // Optionally show success message
           }}
         />
+      )}
+
+      {showAdmin && (
+        <Admin onClose={() => setShowAdmin(false)} />
       )}
     </div>
   );

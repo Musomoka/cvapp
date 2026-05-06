@@ -77,6 +77,15 @@
   transform: translateY(-2px);
 }
 
+.header-btn.admin-btn {
+  background: rgba(167, 139, 250, 0.2);
+  border-color: rgba(167, 139, 250, 0.5);
+}
+.header-btn.admin-btn:hover {
+  background: rgba(167, 139, 250, 0.35);
+  border-color: #a78bfa;
+}
+
 .user-avatar {
   width: 40px;
   height: 40px;

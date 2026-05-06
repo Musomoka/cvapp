@@ -8,7 +8,6 @@ function FileUpload({ onUploadSuccess }) {
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState(null);
   const [uploadedText, setUploadedText] = useState(null);
-  const [metadata, setMetadata] = useState(null);
   const fileInputRef = useRef(null);
 
   const handleDragOver = (e) => {
@@ -42,7 +41,6 @@ function FileUpload({ onUploadSuccess }) {
     setIsProcessing(true);
     setError(null);
     setUploadedText(null);
-    setMetadata(null);
 
     try {
       // Create FormData to send file to backend
@@ -64,8 +62,8 @@ function FileUpload({ onUploadSuccess }) {
       // Extract parsed data and metadata
       const { data, metadata } = result;
       
-      // Store metadata for display
-      setMetadata(metadata);
+      // Log metadata to console (visible in admin panel)
+      console.log('CV parse metadata:', metadata);
       setUploadedText(`CV parsed successfully using ${metadata.model}`);
       
       // Call the parent callback with the parsed data
@@ -152,20 +150,10 @@ function FileUpload({ onUploadSuccess }) {
         </div>
       )}
 
-      {uploadedText && metadata && (
-        <div className="extracted-text-preview">
-          <h4>✅ CV Parsed Successfully</h4>
-          <div className="text-preview-box">
-            <p><strong>File:</strong> {metadata.filename}</p>
-            <p><strong>Size:</strong> {(metadata.fileSize / 1024).toFixed(2)} KB</p>
-            <p><strong>Extracted Text:</strong> {metadata.extractedTextLength} characters</p>
-            <p><strong>AI Model:</strong> {metadata.model}</p>
-            <p><strong>Tokens Used:</strong> ~{metadata.estimatedTokens}</p>
-            <p><strong>Estimated Cost:</strong> ${metadata.estimatedCost?.toFixed(4) || '0.0000'}</p>
-          </div>
-          <p className="preview-note">
-            ℹ️ Review the auto-filled information below and make any necessary adjustments
-          </p>
+      {uploadedText && (
+        <div className="upload-success">
+          <span className="success-icon">✅</span>
+          <p>{uploadedText} — review the filled fields below and adjust as needed.</p>
         </div>
       )}
     </div>

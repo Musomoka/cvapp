@@ -36,6 +36,8 @@ function saveUsers(data) {
   fs.writeFileSync(USERS_FILE, JSON.stringify(data, null, 2));
 }
 
+export { loadUsers, saveUsers, JWT_SECRET };
+
 // Middleware to verify JWT token
 export const authenticateToken = (req, res, next) => {
   const authHeader = req.headers['authorization'];
@@ -80,12 +82,13 @@ router.post('/register', async (req, res) => {
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create user
+    // Create user — first user ever becomes admin
     const user = {
       id: store.nextId++,
       name,
       email,
       password: hashedPassword,
+      isAdmin: store.users.length === 0,
       createdAt: new Date().toISOString()
     };
 
@@ -94,7 +97,7 @@ router.post('/register', async (req, res) => {
 
     // Generate JWT token
     const token = jwt.sign(
-      { id: user.id, email: user.email },
+      { id: user.id, email: user.email, isAdmin: user.isAdmin },
       JWT_SECRET,
       { expiresIn: '7d' }
     );
@@ -139,7 +142,7 @@ router.post('/login', async (req, res) => {
 
     // Generate JWT token
     const token = jwt.sign(
-      { id: user.id, email: user.email },
+      { id: user.id, email: user.email, isAdmin: user.isAdmin || false },
       JWT_SECRET,
       { expiresIn: '7d' }
     );
