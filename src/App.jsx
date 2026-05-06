@@ -26,7 +26,8 @@ function App() {
   const [showSaveDialog, setShowSaveDialog] = useState(false);
   const [showAdmin, setShowAdmin] = useState(false);
   const idCounter = useRef(1);
-  
+  const cvExportRef = useRef(null);
+
   const generateId = () => {
     return idCounter.current++;
   };
@@ -327,7 +328,7 @@ function App() {
             {currentStep === 5 && (
               <button 
                 className="nav-btn finish-btn"
-                onClick={() => window.print()}
+                onClick={() => cvExportRef.current?.()}
               >
                 🎉 Download CV
               </button>
@@ -342,6 +343,7 @@ function App() {
             isAuthenticated={isAuthenticated}
             onLoginRequired={() => setShowLogin(true)}
             currentStep={currentStep}
+            exportRef={cvExportRef}
           />
         </div>
       </div>

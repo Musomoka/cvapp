@@ -10,7 +10,7 @@ import './templates/ProfessionalTemplate.css';
 // Maps step number → data-cv-section attribute value (null = scroll to top)
 const STEP_SECTIONS = { 1: null, 2: 'personal-info', 3: 'education', 4: 'experience', 5: 'skills' };
 
-function CVPreview({ data, template = 'modern', isAuthenticated = false, onLoginRequired, currentStep }) {
+function CVPreview({ data, template = 'modern', isAuthenticated = false, onLoginRequired, currentStep, exportRef }) {
   const [isExporting, setIsExporting] = useState(false);
 
   useEffect(() => {
@@ -101,6 +101,9 @@ function CVPreview({ data, template = 'modern', isAuthenticated = false, onLogin
     pdf.save(fileName);
     setIsExporting(false);
   };
+
+  // Expose export function to parent via ref
+  if (exportRef) exportRef.current = handleExportPDF;
 
   const renderContent = () => {
     switch (template) {
