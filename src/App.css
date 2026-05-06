@@ -309,19 +309,7 @@
 .preview-section {
   position: sticky;
   top: 20px;
-  /* tall CVs scroll within the column */
-  max-height: calc(100vh - 20px);
-  overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(102,126,234,0.4) transparent;
-}
-
-.preview-section::-webkit-scrollbar {
-  width: 5px;
-}
-.preview-section::-webkit-scrollbar-thumb {
-  background: rgba(102,126,234,0.35);
-  border-radius: 3px;
+  /* Do NOT set overflow here — it breaks position:sticky */
 }
 
 /* Responsive Design */
@@ -332,8 +320,6 @@
   
   .preview-section {
     position: static;
-    max-height: none;
-    overflow-y: visible;
   }
 
   .steps-wrapper {
