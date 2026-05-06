@@ -29,31 +29,29 @@
   font-size: 0.9rem;
   transition: background 0.2s;
   font-weight: 500;
+  white-space: nowrap;
 }
 
 .print-btn:hover {
   background: #218838;
 }
 
+/* Wrapper scales the A4 sheet to fit the available column width */
+.cv-preview-wrapper {
+  overflow-x: auto;
+}
+
 .cv-preview {
   background: white;
   padding: 0.75in;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-  /* A4 dimensions scaled to 75% for better screen fit */
-  width: 6.2in;
-  min-height: 8.8in;
-  margin: 20px auto;
+  /* True A4 width — the wrapper handles overflow on small screens */
+  width: 8.27in;
+  min-height: 11.69in;
+  margin: 0 auto;
   position: relative;
-  transform-origin: top center;
+  box-sizing: border-box;
 }
-
-/* Letter size alternative (8.5" × 11") scaled to 75% - uncomment if preferred */
-/*
-.cv-preview {
-  width: 6.375in;
-  min-height: 8.25in;
-}
-*/
 
 /* CV Header */
 .cv-header {
