@@ -81,17 +81,17 @@
   100% { transform: rotate(360deg); }
 }
 
-/* Success State */
-.upload-success {
+/* Success State — inner box (inside upload-area) */
+.upload-success-inner {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 15px;
 }
 
-.success-icon {
-  width: 50px;
-  height: 50px;
+.success-icon-lg {
+  width: 56px;
+  height: 56px;
   background: #28a745;
   color: white;
   border-radius: 50%;
@@ -102,7 +102,7 @@
   font-weight: bold;
 }
 
-.upload-success p {
+.upload-success-inner p {
   color: #28a745;
   font-weight: 600;
   font-size: 1rem;
@@ -123,6 +123,44 @@
 
 .upload-again-btn:hover {
   background: #5568d3;
+}
+
+/* Progress bar — shown while streaming */
+.upload-processing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 20px;
+}
+
+.processing-label {
+  color: #17a2b8;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.progress-track {
+  width: 100%;
+  max-width: 420px;
+  height: 10px;
+  background: #e0e7ff;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+  transition: width 0.4s ease;
+}
+
+.progress-pct {
+  color: #667eea;
+  font-size: 0.85rem;
+  font-weight: 600;
 }
 
 /* Error State */

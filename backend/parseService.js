@@ -14,8 +14,107 @@ const openai = new OpenAI({
 });
 
 /**
- * Parse CV text using OpenAI GPT
- * Returns structured CV data in the format expected by the frontend
+ * Parse CV text using DeepSeek with streaming.
+ * onToken(chunk, totalTokensSoFar) is called for every streamed token.
+ * Returns the fully assembled, validated CV data object.
+ */
+export async function parseCVStream(cvText, onToken) {
+  const model = process.env.AI_MODEL || 'deepseek-chat';
+
+  const prompt = `You are a CV/Resume parser. Extract and structure the following CV information into JSON format.
+
+CV Text:
+${cvText}
+
+Please extract and return a JSON object with the following structure:
+{
+  "personalInfo": {
+    "fullName": "",
+    "email": "",
+    "phone": "",
+    "location": "",
+    "linkedIn": "",
+    "portfolio": ""
+  },
+  "education": [
+    {
+      "school": "",
+      "degree": "",
+      "field": "",
+      "startDate": "YYYY-MM",
+      "endDate": "YYYY-MM or 'present'",
+      "description": ""
+    }
+  ],
+  "experience": [
+    {
+      "company": "",
+      "position": "",
+      "startDate": "YYYY-MM",
+      "endDate": "YYYY-MM or 'present'",
+      "description": ""
+    }
+  ],
+  "skills": ["skill1", "skill2", "skill3"]
+}
+
+Important:
+- Extract ALL information present in the CV
+- Format dates as YYYY-MM (e.g., "2020-01" for January 2020)
+- Use "present" for current positions/education
+- If a field is not found, use an empty string or empty array
+- Preserve the exact job descriptions and education details
+- Extract all technical and soft skills mentioned
+- Return ONLY valid JSON, no markdown or explanations`;
+
+  const stream = await openai.chat.completions.create({
+    model,
+    messages: [
+      {
+        role: 'system',
+        content: 'You are a professional CV parser that extracts structured data from resumes. Always return valid JSON only.',
+      },
+      { role: 'user', content: prompt },
+    ],
+    temperature: 0.1,
+    response_format: { type: 'json_object' },
+    stream: true,
+  });
+
+  let fullContent = '';
+  let tokenCount = 0;
+
+  for await (const chunk of stream) {
+    const delta = chunk.choices[0]?.delta?.content || '';
+    if (delta) {
+      fullContent += delta;
+      tokenCount++;
+      process.stdout.write(delta); // live token output to terminal
+      onToken?.(delta, tokenCount);
+    }
+  }
+
+  // newline after inline token dump
+  process.stdout.write('\n');
+  console.log(`[DeepSeek] Stream complete — ${tokenCount} chunks received`);
+
+  let parsed;
+  try {
+    parsed = JSON.parse(fullContent);
+  } catch {
+    throw new Error('DeepSeek returned invalid JSON after streaming');
+  }
+
+  return {
+    personalInfo: parsed.personalInfo || {},
+    education: parsed.education || [],
+    experience: parsed.experience || [],
+    skills: parsed.skills || [],
+  };
+}
+
+/**
+ * Parse CV text using DeepSeek (non-streaming, kept for compatibility).
  */
 export async function parseCV(cvText) {
   try {
