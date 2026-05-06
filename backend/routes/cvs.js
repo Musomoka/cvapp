@@ -1,15 +1,38 @@
 import express from 'express';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { authenticateToken } from './auth.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const router = express.Router();
 
-// In-memory CV storage (replace with database in production)
-const cvs = [];
-let nextCVId = 1;
+// JSON file persistence
+const DATA_DIR = process.env.DATA_DIR || path.join(__dirname, '..', 'data');
+const CVS_FILE = path.join(DATA_DIR, 'cvs.json');
+
+function ensureDataDir() {
+  if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
+}
+
+function loadCVs() {
+  ensureDataDir();
+  if (!fs.existsSync(CVS_FILE)) return { cvs: [], nextId: 1 };
+  try { return JSON.parse(fs.readFileSync(CVS_FILE, 'utf8')); }
+  catch { return { cvs: [], nextId: 1 }; }
+}
+
+function saveCVs(data) {
+  ensureDataDir();
+  fs.writeFileSync(CVS_FILE, JSON.stringify(data, null, 2));
+}
 
 // Get all CVs for the authenticated user
 router.get('/', authenticateToken, (req, res) => {
   try {
+    const { cvs } = loadCVs();
     const userCVs = cvs
       .filter(cv => cv.userId === req.user.id)
       .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
@@ -28,6 +51,7 @@ router.get('/', authenticateToken, (req, res) => {
 router.get('/:id', authenticateToken, (req, res) => {
   try {
     const cvId = parseInt(req.params.id);
+    const { cvs } = loadCVs();
     const cv = cvs.find(c => c.id === cvId && c.userId === req.user.id);
 
     if (!cv) {
@@ -53,8 +77,9 @@ router.post('/', authenticateToken, (req, res) => {
       return res.status(400).json({ error: 'Name, data, and template are required' });
     }
 
+    const store = loadCVs();
     const cv = {
-      id: nextCVId++,
+      id: store.nextId++,
       userId: req.user.id,
       name,
       data,
@@ -63,7 +88,8 @@ router.post('/', authenticateToken, (req, res) => {
       updatedAt: new Date().toISOString()
     };
 
-    cvs.push(cv);
+    store.cvs.push(cv);
+    saveCVs(store);
 
     res.status(201).json({
       success: true,
@@ -82,7 +108,8 @@ router.put('/:id', authenticateToken, (req, res) => {
     const cvId = parseInt(req.params.id);
     const { name, data, template } = req.body;
 
-    const cv = cvs.find(c => c.id === cvId && c.userId === req.user.id);
+    const store = loadCVs();
+    const cv = store.cvs.find(c => c.id === cvId && c.userId === req.user.id);
 
     if (!cv) {
       return res.status(404).json({ error: 'CV not found' });
@@ -92,6 +119,7 @@ router.put('/:id', authenticateToken, (req, res) => {
     if (data) cv.data = data;
     if (template) cv.template = template;
     cv.updatedAt = new Date().toISOString();
+    saveCVs(store);
 
     res.json({
       success: true,
@@ -108,13 +136,15 @@ router.put('/:id', authenticateToken, (req, res) => {
 router.delete('/:id', authenticateToken, (req, res) => {
   try {
     const cvId = parseInt(req.params.id);
-    const cvIndex = cvs.findIndex(c => c.id === cvId && c.userId === req.user.id);
+    const store = loadCVs();
+    const cvIndex = store.cvs.findIndex(c => c.id === cvId && c.userId === req.user.id);
 
     if (cvIndex === -1) {
       return res.status(404).json({ error: 'CV not found' });
     }
 
-    cvs.splice(cvIndex, 1);
+    store.cvs.splice(cvIndex, 1);
+    saveCVs(store);
 
     res.json({
       success: true,

@@ -1,15 +1,40 @@
 import express from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const router = express.Router();
 
-// In-memory user storage (replace with database in production)
-const users = [];
-let nextUserId = 1;
+// JWT Secret — required in production
+if (!process.env.JWT_SECRET && process.env.NODE_ENV === 'production') {
+  throw new Error('JWT_SECRET environment variable must be set in production');
+}
+const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-change-in-production';
 
-// JWT Secret (use environment variable in production)
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-this-in-production';
+// JSON file persistence
+const DATA_DIR = process.env.DATA_DIR || path.join(__dirname, '..', 'data');
+const USERS_FILE = path.join(DATA_DIR, 'users.json');
+
+function ensureDataDir() {
+  if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
+}
+
+function loadUsers() {
+  ensureDataDir();
+  if (!fs.existsSync(USERS_FILE)) return { users: [], nextId: 1 };
+  try { return JSON.parse(fs.readFileSync(USERS_FILE, 'utf8')); }
+  catch { return { users: [], nextId: 1 }; }
+}
+
+function saveUsers(data) {
+  ensureDataDir();
+  fs.writeFileSync(USERS_FILE, JSON.stringify(data, null, 2));
+}
 
 // Middleware to verify JWT token
 export const authenticateToken = (req, res, next) => {
@@ -43,6 +68,9 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ error: 'Password must be at least 6 characters' });
     }
 
+    const store = loadUsers();
+    const { users } = store;
+
     // Check if user already exists
     const existingUser = users.find(u => u.email === email);
     if (existingUser) {
@@ -54,7 +82,7 @@ router.post('/register', async (req, res) => {
 
     // Create user
     const user = {
-      id: nextUserId++,
+      id: store.nextId++,
       name,
       email,
       password: hashedPassword,
@@ -62,6 +90,7 @@ router.post('/register', async (req, res) => {
     };
 
     users.push(user);
+    saveUsers(store);
 
     // Generate JWT token
     const token = jwt.sign(
@@ -93,6 +122,8 @@ router.post('/login', async (req, res) => {
     if (!email || !password) {
       return res.status(400).json({ error: 'Email and password are required' });
     }
+
+    const { users } = loadUsers();
 
     // Find user
     const user = users.find(u => u.email === email);
@@ -132,7 +163,8 @@ router.put('/update-profile', authenticateToken, async (req, res) => {
   try {
     const { name } = req.body;
 
-    const user = users.find(u => u.id === req.user.id);
+    const store = loadUsers();
+    const user = store.users.find(u => u.id === req.user.id);
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
@@ -140,6 +172,7 @@ router.put('/update-profile', authenticateToken, async (req, res) => {
     if (name) {
       user.name = name;
     }
+    saveUsers(store);
 
     const { password: _, ...userWithoutPassword } = user;
 
@@ -166,7 +199,8 @@ router.put('/change-password', authenticateToken, async (req, res) => {
       return res.status(400).json({ error: 'New password must be at least 6 characters' });
     }
 
-    const user = users.find(u => u.id === req.user.id);
+    const store = loadUsers();
+    const user = store.users.find(u => u.id === req.user.id);
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
@@ -179,6 +213,7 @@ router.put('/change-password', authenticateToken, async (req, res) => {
 
     // Hash new password
     user.password = await bcrypt.hash(newPassword, 10);
+    saveUsers(store);
 
     res.json({
       success: true,
@@ -192,6 +227,7 @@ router.put('/change-password', authenticateToken, async (req, res) => {
 
 // Get current user
 router.get('/me', authenticateToken, (req, res) => {
+  const { users } = loadUsers();
   const user = users.find(u => u.id === req.user.id);
   if (!user) {
     return res.status(404).json({ error: 'User not found' });
