@@ -1,6 +1,8 @@
 .app {
-  min-height: 100vh;
-  padding-bottom: 40px;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .app-header {
@@ -108,6 +110,15 @@
   border-color: white;
 }
 
+/* Steps bar — fixed height, doesn't scroll */
+.steps-wrapper {
+  flex-shrink: 0;
+  max-width: 1600px;
+  margin: 0 auto 20px;
+  padding: 0 20px;
+  width: 100%;
+}
+
 .app-container {
   max-width: 1600px;
   margin: 0 auto;
@@ -116,6 +127,11 @@
   grid-template-columns: 1fr 2fr;
   gap: 24px;
   align-items: start;
+  /* Take up remaining viewport height and let each column scroll */
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  width: 100%;
 }
 
 /* Form Section */
@@ -123,7 +139,14 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+  height: 100%;
+  overflow-y: auto;
+  padding-bottom: 40px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(102,126,234,0.4) transparent;
 }
+.form-section::-webkit-scrollbar { width: 5px; }
+.form-section::-webkit-scrollbar-thumb { background: rgba(102,126,234,0.35); border-radius: 3px; }
 
 .section {
   background: white;
@@ -307,19 +330,33 @@
 
 /* Preview Section */
 .preview-section {
-  position: sticky;
-  top: 20px;
-  /* Do NOT set overflow here — it breaks position:sticky */
+  height: 100%;
+  overflow-y: auto;
+  padding-bottom: 40px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(102,126,234,0.4) transparent;
 }
+.preview-section::-webkit-scrollbar { width: 5px; }
+.preview-section::-webkit-scrollbar-thumb { background: rgba(102,126,234,0.35); border-radius: 3px; }
 
 /* Responsive Design */
 @media (max-width: 1100px) {
+  .app {
+    height: auto;
+    overflow: visible;
+  }
+
   .app-container {
     grid-template-columns: 1fr;
+    flex: none;
+    overflow: visible;
   }
-  
+
+  .form-section,
   .preview-section {
-    position: static;
+    height: auto;
+    overflow-y: visible;
+    padding-bottom: 0;
   }
 
   .steps-wrapper {
